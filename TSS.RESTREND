@@ -1,0 +1,72 @@
+---
+title: "TSS.RESTREND"
+author: "SHIRISH MAHARJAN"
+date: "7/26/2021"
+output: html_document
+---
+
+#Load required packages 
+
+```{r, echo=TRUE}
+library(TSS.RESTREND)
+library(raster)
+library(rgdal)
+library(ggplot2)
+library(ggthemes)
+library(graphics)
+```
+
+#Load the one year NDVI rasters file in yearly_ndvi variable. 
+
+```{r, echo=TRUE}
+yearly_ndvi <- list.files('/media/shirish/New Volume/GIIS/Training Session/R/Ashweshwar Ji (GEEOUT)/Data/1 year data (NDVI and Climate)/NDVI',
+                          full.names = TRUE,
+                          pattern = ".tif$")
+```
+
+#Load the one year CLIMATE rasters file in yearly_climate variable. 
+
+```{r, echo=TRUE}
+yearly_climate <- list.files('/media/shirish/New Volume/GIIS/Training Session/R/Ashweshwar Ji (GEEOUT)/Data/1 year data (NDVI and Climate)/Tera Climate',
+                             full.names = TRUE,
+                             pattern = ".tif$")
+```
+
+#Stack the NDVI and Climate raster files.
+
+```{r, echo=TRUE}
+yearly_ndvi_stack <- stack(yearly_ndvi)
+yearly_climate_stack <- stack(yearly_climate)
+```
+
+#Convert the stacked raster files into data frames using as.data.frame()
+
+```{r, echo=TRUE}
+yearly_ndvi_stack_df <- as.data.frame(yearly_ndvi_stack, xy=T)
+yearly_climate_stack_df <- as.data.frame(yearly_climate_stack, xy=T)
+```
+
+#Remove NA's from the newly converted data frames 
+
+```{r, echo=TRUE}
+yearly_ndvi_stack_df <- na.omit(yearly_ndvi_stack_df)
+yearly_climate_stack_df <- na.omit(yearly_climate_stack_df)
+```
+
+#Create a new variables CTSR.VI and rf.data and load the NDVI and Climate data respectively.
+#CTSR.VI : Complete Monthly Time series of Vegetation Index (NDVI Data)
+#rf.data : Rainfall data (Climate data)
+
+```{r, echo=TRUE}
+CTSR.VI <- yearly_ndvi_stack_df
+rf.data <- yearly_climate_stack_df
+```
+
+#Define the max accumuulation period and max offset period
+
+```{r, echo=TRUE}
+max.acp <- 12
+max.osp <- 4 
+```
+
+#Create a table of every possible precipitation value given the max.acp and max.osp
