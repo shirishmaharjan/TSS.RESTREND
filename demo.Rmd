@@ -1,0 +1,13 @@
+---
+title: "Untitled"
+author: "SHIRISH MAHARJAN"
+date: "7/26/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+plot(Titanic)
+```
+
